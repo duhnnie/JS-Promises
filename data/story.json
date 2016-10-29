@@ -1,0 +1,45 @@
+{
+    "title": "Game Of Thrones (Season 1)",
+    "chapters": [
+        {
+            "title": "Winter Is Coming",
+            "url": "data/01x01.json"
+        },
+        {
+            "title": "The Kingsroad",
+            "url": "data/01x02.json"
+        },
+        {
+            "title": "Lord Snow",
+            "url": "data/01x03.json"
+        },
+        {
+            "title": "Cripples, Bastards and Broken Things",
+            "url": "data/01x04.json"
+        },
+        {
+            "title": "The Wolf and The Lion",
+            "url": "data/01x05.json"
+        },
+        {
+            "title": "A Golden Crown",
+            "url": "data/01x06.json"
+        },
+        {
+            "title": "You Win or You Die",
+            "url": "data/01x07.json"
+        },
+        {
+            "title": "The Pointy End",
+            "url": "data/01x08.json"
+        },
+        {
+            "title": "Baelor",
+            "url": "data/01x09.json"
+        },
+        {
+            "title": "Fire and Blood",
+            "url": "data/01x10.json"
+        }
+    ]
+}
