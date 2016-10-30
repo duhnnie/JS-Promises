@@ -4,38 +4,14 @@
         <script type="text/javascript" src="js/get.js"></script>
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function () {
-
-                document.getElementById('chapters').addEventListener('click', function (e) {
-                    var element = e.target;
-
-                    if (element.tagName === 'A') {
-                        e.preventDefault();
-                        get(element.href).then(JSON.parse).then(function (chapter) {
-                            document.getElementById('chapter-description').textContent = chapter.description;   
-                        });
-                    }
-                });
-
                 var button = document.querySelector('#load');
                 button.addEventListener('click', function () {
-                    get('data/story.json').then(JSON.parse).then(function (story) {
-                        var title = document.querySelector('#title'),
-                            list = document.querySelector('#chapters'),
-                            chapters;
-
-                        title.textContent = story.title;
-                        chapters = story.chapters;
-
-                        for (let i = 0; i < chapters.length; i += 1) {
-                            let item = document.createElement('li'),
-                                link = document.createElement('a');
-                            
-                            link.appendChild(document.createTextNode(chapters[i].title));
-                            link.href = chapters[i].url;
-                            item.appendChild(link);
-
-                            list.appendChild(item);
-                        }
+                    var chapterIndex = parseInt(document.getElementById('chapter-index').value, 10);
+                    getChapter(chapterIndex).then(function (chapter) {
+                        document.getElementById('chapter-description').textContent = chapter.description;
+                        return getChapter(chapterIndex + 1);
+                    }).then(function (nextChapter) {
+                        console.log("next chapter:", nextChapter);
                     });
                 });
             });
@@ -43,10 +19,8 @@
         <title>Playing with Promises</title>
     </head>
     <body>
+        <input type="number" id="chapter-index"/>
         <button id="load">Load</button>
-        <h1 id="title"></h1>
-        <ul id="chapters">
-        </ul>
         <div>
             <h2 id="chapter-title"></h2>
             <p id="chapter-description"></p>

@@ -20,3 +20,16 @@ var get = function (url) {
         xhr.send();
     });
 };
+
+var getChapter = (function () {
+    var storyPromise;
+
+    return function (i) {
+        storyPromise = storyPromise || get('data/story.json');
+
+        return storyPromise.then(JSON.parse)
+            .then(function (story) {
+                return get(story.chapters[i - 1].url);
+            }).then(JSON.parse);
+    };
+})();
