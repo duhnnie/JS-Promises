@@ -21,15 +21,22 @@ var get = function (url) {
     });
 };
 
+var getJSON = function (url) {
+    return get(url).then(JSON.parse);
+};
+
 var getChapter = (function () {
     var storyPromise;
 
     return function (i) {
-        storyPromise = storyPromise || get('data/story.json');
+        storyPromise = storyPromise || getJSON('data/story.json');
 
-        return storyPromise.then(JSON.parse)
+        return storyPromise
             .then(function (story) {
-                return get(story.chapters[i - 1].url);
-            }).then(JSON.parse);
+                return getJSON(story.chapters[i - 1].url);
+            })
+            .catch(function (err) {
+                console.log("error", err);
+            });
     };
 })();
