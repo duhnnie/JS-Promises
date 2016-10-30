@@ -3,27 +3,46 @@
     <head>
         <script type="text/javascript" src="js/get.js"></script>
         <script type="text/javascript">
+
+            function addChapter (title, description) {
+                var header = document.createElement('h2'),
+                    item = document.createElement('p');
+                
+                header.appendChild(document.createTextNode(title));
+
+                item.appendChild(document.createTextNode(description));
+                document.getElementById('chapters').appendChild(header);
+                document.getElementById('chapters').appendChild(item);
+            }
+
             document.addEventListener('DOMContentLoaded', function () {
-                var button = document.querySelector('#load');
-                button.addEventListener('click', function () {
-                    var chapterIndex = parseInt(document.getElementById('chapter-index').value, 10);
-                    getChapter(chapterIndex).then(function (chapter) {
-                        document.getElementById('chapter-description').textContent = chapter.description;
-                        return getChapter(chapterIndex + 1);
-                    }).then(function (nextChapter) {
-                        console.log("next chapter:", nextChapter);
-                    });
+                getJSON('data/story.json').then(function (story) {
+                    document.getElementById('story-title').textContent = story.title;
+
+                    return story.chapters.reduce(function (promise, chapter) {
+                        return promise.then(function () {
+                            return getJSON(chapter.url);
+                        }).then(function (chapterJSON) {
+                            addChapter(chapter.title, chapterJSON.description);
+                        });
+                    }, Promise.resolve());
+                }).catch(function (err) {
+                    console.log('error: ', err);
+                }).then(function () {
+                    document.getElementById('spinner').style.display = 'none';
                 });
             });
         </script>
         <title>Playing with Promises</title>
     </head>
     <body>
-        <input type="number" id="chapter-index"/>
-        <button id="load">Load</button>
+        <h1 id="story-title"></h1>
         <div>
             <h2 id="chapter-title"></h2>
-            <p id="chapter-description"></p>
+            <div id="chapters"></div>
+        </div>
+        <div id="spinner">
+            <img src="img/spinner.gif"/>
         </div>
     </body>
 </html>

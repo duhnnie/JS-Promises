@@ -3,7 +3,7 @@ var get = function (url) {
 
         var xhr =  new XMLHttpRequest();
 
-        xhr.open('GET', url);
+        xhr.open('GET', url, true);
 
         xhr.onload = function () {
             if (xhr.status === 200) {
@@ -17,26 +17,10 @@ var get = function (url) {
             reject(Error("Network error!"));
         };
 
-        xhr.send();
+        xhr.send(null);
     });
 };
 
 var getJSON = function (url) {
     return get(url).then(JSON.parse);
 };
-
-var getChapter = (function () {
-    var storyPromise;
-
-    return function (i) {
-        storyPromise = storyPromise || getJSON('data/story.json');
-
-        return storyPromise
-            .then(function (story) {
-                return getJSON(story.chapters[i - 1].url);
-            })
-            .catch(function (err) {
-                console.log("error", err);
-            });
-    };
-})();
