@@ -16,19 +16,19 @@
             }
 
             document.addEventListener('DOMContentLoaded', function () {
-                var theChapters;
                 getJSON('data/story.json').then(function (story) {
                     document.getElementById('story-title').textContent = story.title;
-                    theChapters = story.chapters;
-                    return Promise.all(story.chapters.map(function (chapter) {
+                    return story.chapters.map(function (chapter) {
                         return getJSON(chapter.url);
-                    }));
-                }).then(function (chapters) {
-                    chapters.forEach(function (chapter, index) {
-                        addChapter(theChapters[index].title, chapter.description);
-                    });
+                    }).reduce(function (previousPromise, chapterPromise) {
+                        return previousPromise.then(function () {
+                            return chapterPromise;
+                        }).then(function (chapter) {
+                            addChapter('', chapter.description);
+                        });
+                    }, Promise.resolve());
                 }).catch(function () {
-                    alert('something went wrong.');
+                    alert('something went wrong!');
                 }).then(function () {
                     document.getElementById('spinner').style.display = 'none';
                 });
